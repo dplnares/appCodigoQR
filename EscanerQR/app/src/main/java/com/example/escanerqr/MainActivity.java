@@ -14,8 +14,9 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnScan;
+    Button btnScan, btnBuscar, btnAgregar;
     EditText txtResultado;
+    String codigoEscaneado;
 
 
     @Override
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnScan = findViewById(R.id.btnScan);
         txtResultado = findViewById(R.id.txtResultado);
+        btnBuscar = findViewById(R.id.btnBuscar);
+        btnAgregar = findViewById(R.id.btnAgregar);
 
         // Leer el codigo QR
         btnScan.setOnClickListener(new View.OnClickListener() {
@@ -33,11 +36,26 @@ public class MainActivity extends AppCompatActivity {
                 IntentIntegrator integrador = new IntentIntegrator(MainActivity.this);
                 integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrador.setPrompt("LECTOR - CDP");
+
                 // Camara posterior
                 integrador.setCameraId(0);
                 integrador.setBeepEnabled(true);
                 integrador.setBarcodeImageEnabled(true);
                 integrador.initiateScan();
+            }
+        });
+
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ListarDatosActivity.class));
+            }
+        });
+
+        btnAgregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AgregarActivity.class));
             }
         });
     }
@@ -56,12 +74,19 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
-                txtResultado.setText(result.getContents());
+                // Almaceno en una variable local el valor del dato escaneado
+                codigoEscaneado = result.getContents();
+                txtResultado.setText(codigoEscaneado);
             }
         }
         else
         {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    protected void obtenerDatos(String codigo)
+    {
+
     }
 }
